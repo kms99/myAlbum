@@ -6,3 +6,5 @@ html, css, javascript, jquery, bootstrap
 google firebase firestore
 # 배포주소
 https://kms99.github.io/myAlbum/
+
+![image](https://github.com/kms99/myAlbum/assets/29966870/49076e9f-b677-4815-9abb-6c8410711e10)
