@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Album</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/7f620221f2.js" crossorigin="anonymous"></script>
+
+    <!-- jquery 사용시 type ='module' 꼭 입력-->
+    <script type="module"> 
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import {
+            collection,
+            addDoc,
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCRtnQasPnOrIwbSAfN2gQdWYqrkiwMzg",
+            authDomain: "sparta-c48a5.firebaseapp.com",
+            projectId: "sparta-c48a5",
+            storageBucket: "sparta-c48a5.appspot.com",
+            messagingSenderId: "823259035177",
+            appId: "1:823259035177:web:2efbea644a5e0710a30e38",
+            measurementId: "G-P79TQTLFWQ"
+        };
+ 
+       // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        // Initialize Cloud Firestore and get a reference to the service
+        const db = getFirestore(app);
+
+
+        $("#postingBoxOpen").click(function () {
+          $("#posting-container").toggle();
+        });
+        $('#closePosting-btn').click(function(){
+          $("#posting-container").toggle();
+        })
+
+
+        $('#addPosting-btn').click(async function (){
+            const image = $('#image').val();
+            const title = $('#title').val();
+            const content = $('#content').val();
+            const date = $('#date').val();
+            const docRef = await addDoc(collection(db, "myAlbums"), {
+                image, title, content, date
+            });
+            alert("저장완료");
+            window.location.reload();
+        })
+        const querySnapshot = await getDocs(collection(db, "myAlbums"));
+        querySnapshot.forEach((doc) => {
+            const row = doc.data();
+            const {title, date,content, image} = row;
+            const innerHtml = 
+            `<div class="col">
+                <div class="card">
+                    <img
+                    src="${image}"
+                    class="card-img-top"
+                    alt="..."
+                    height ="250px"
+                    />
+                    <div class="card-body">
+                        <h5 class="card-title">${title}</h5>
+                        <p class="card-text">${content}</p>
+                        <p class="card-text">${date}</p>
+                    </div>
+                </div>
+            </div>`
+
+            $('#list-area').append(innerHtml);
+        });
+    </script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Caprasimo&family=Diphylleia&family=Nanum+Myeongjo&family=Oswald:wght@200&family=Raleway:wght@100&family=Roboto+Slab:wght@300&display=swap");
+
+      * {
+        font-family: "Diphylleia", serif;
+      }
+      .nav {
+        background-image: linear-gradient(
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0.5)
+          ),
+          url("https://media.istockphoto.com/id/178281231/photo/old-pictures-and-journal.jpg?s=612x612&w=0&k=20&c=skH-IrlI_jN5Zzstecfm0n3eBwGI3nR0ArwsJOmwaV0=");
+        background-size: cover;
+        background-position: center;
+        padding: 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+
+      .nav > button {
+        background-color: transparent;
+        border: 1px solid white;
+        border-radius: 5px;
+        padding: 0.5em;
+        margin-top: 1em;
+        color: white;
+      }
+
+      .nav > button:hover {
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+
+      .posting-container {
+        width: 40vw;
+        margin: 1em auto 0 auto;
+        box-shadow: 0 0 5px 1px gray;
+        padding: 1em;
+        display:none;
+      }
+      .posting-input {
+        color: black;
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+      .posting-label {
+        font-weight: 700;
+      }
+      .posting-button-area {
+        display: flex;
+        justify-content: center;
+      }
+      .posting-button-area > button {
+        margin-right: 1em;
+        border-radius: 3px;
+        font-weight: bold;
+        padding: 0.3em;
+      }
+      .record-btn {
+        border: 1px solid blue;
+        background-color: rgba(119, 171, 219, 0.815);
+      }
+      .close-btn {
+        border: 1px solid red;
+        background-color: rgba(219, 119, 141, 0.815);
+      }
+      .record-btn:hover {
+        border: 1px solid blue;
+        background-color: rgb(119, 171, 219);
+      }
+      .close-btn:hover {
+        border: 1px solid red;
+        background-color: rgb(219, 119, 141);
+      }
+      .list-container {
+        width: 90vw;
+        margin: 30px auto 0 auto;
+      }
+      .list-container > h2 {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 1em;
+      }
+      .card-img-top{
+        object-fit: cover;
+      }
+      .sub-title{
+        margin: 0 1em;
+      }
+
+      @media screen and (max-width: 600px) {
+        .posting-container {
+          width: 90vw;
+        }
+      }
+    </style>
+
+
+  </head>
+  <body>
+    <div class="nav">
+      <h1>나만의 추억앨범</h1>
+      <button id="postingBoxOpen">추억 기록하기</button>
+    </div>
+
+    <div class="posting-container" id="posting-container">
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control posting-input"
+          id="image"
+          placeholder="앨범 이미지"
+        />
+        <label class="posting-label" for="image">앨범 이미지</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control posting-input"
+          id="title"
+          placeholder="앨범 제목"
+        />
+        <label class="posting-label" for="title">앨범 제목</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control posting-input"
+          id="content"
+          placeholder="앨범 내용"
+        />
+        <label class="posting-label" for="content">앨범 내용</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control posting-input"
+          id="date"
+          placeholder="앨범 날짜"
+        />
+        <label class="posting-label" for="date">앨범 날짜</label>
+      </div>
+      <div class="posting-button-area">
+        <button class="record-btn" id="addPosting-btn">기록하기</button>
+        <button class="close-btn" id="closePosting-btn">닫기</button>
+      </div>
+    </div>
+
+    <div class="list-container">
+      <h2><i class="fa-solid fa-camera"></i><span class="sub-title">나의 기록</span><i class="fa-solid fa-film"></i></i></h2>
+      <div class="row row-cols-1 row-cols-md-4 g-4" id="list-area"></div>
+    </div>
+  </body>
+</html>
